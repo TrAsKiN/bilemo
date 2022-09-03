@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
@@ -22,7 +21,7 @@ class Customer
 
     #[ORM\ManyToOne(inversedBy: 'customers')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?UserInterface $owner = null;
+    private ?User $owner = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\Email]
@@ -45,12 +44,12 @@ class Customer
         return $this;
     }
 
-    public function getOwner(): ?UserInterface
+    public function getOwner(): ?User
     {
         return $this->owner;
     }
 
-    public function setOwner(?UserInterface $owner): self
+    public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
 
