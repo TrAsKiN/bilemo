@@ -17,7 +17,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductRepository extends ServiceEntityRepository
 {
-    public const MAX_PER_PAGE = 2;
+    public const MAX_PER_PAGE = 10;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -46,6 +46,7 @@ class ProductRepository extends ServiceEntityRepository
     {
         $offset = ($page - 1) * $limit;
         $query = $this->createQueryBuilder('p')
+            ->orderBy('p.id')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->getQuery()
