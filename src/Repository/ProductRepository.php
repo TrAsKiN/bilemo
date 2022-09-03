@@ -42,7 +42,7 @@ class ProductRepository extends ServiceEntityRepository
         }
     }
 
-    public function getPaginateProducts(int $page, int $limit = 10): Paginator
+    public function getPaginateProducts(int $page, int $limit = self::MAX_PER_PAGE): Paginator
     {
         $offset = ($page - 1) * $limit;
         $query = $this->createQueryBuilder('p')
