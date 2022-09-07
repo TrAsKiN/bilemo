@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/products')]
 class ProductController extends AbstractController
 {
-    #[Route('/', name: 'app_products_list', methods: [Request::METHOD_GET])]
+    #[Route(name: 'app_products_list', methods: [Request::METHOD_GET])]
     public function productsList(
         Request $request,
         ProductRepository $productRepository,
@@ -22,13 +22,13 @@ class ProductController extends AbstractController
         $page = $request->query->getInt('page', 1);
         $products = $productRepository->getPaginateProducts($page);
         $result = $paginator->paginate($products, 'app_products_list', $page, ProductRepository::MAX_PER_PAGE);
-        return $this->json($result);
+        return $this->json($result)->setSharedMaxAge(3600);
     }
 
     #[Route('/{id}', name: 'app_products_show', methods: [Request::METHOD_GET])]
     public function productsShow(
         Product $product
     ): JsonResponse {
-        return $this->json($product);
+        return $this->json($product)->setSharedMaxAge(3600);
     }
 }

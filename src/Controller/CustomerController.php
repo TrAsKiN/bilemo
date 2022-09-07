@@ -26,7 +26,7 @@ class CustomerController extends AbstractController
         $page = $request->query->getInt('page', 1);
         $customers = $customerRepository->getPaginateCustomers($this->getUser(), $page);
         $result = $paginator->paginate($customers, 'app_customers_list', $page, CustomerRepository::MAX_PER_PAGE);
-        return $this->json($result, Response::HTTP_OK);
+        return $this->json($result, Response::HTTP_OK)->setSharedMaxAge(3600);
     }
 
     #[Route(name: 'app_customers_add', methods: [Request::METHOD_POST])]
@@ -46,7 +46,7 @@ class CustomerController extends AbstractController
         Customer $customer
     ): JsonResponse {
         $this->denyAccessUnlessGranted(CustomerVoter::IS_MINE, $customer);
-        return $this->json($customer, Response::HTTP_OK);
+        return $this->json($customer, Response::HTTP_OK)->setSharedMaxAge(3600);
     }
 
     #[Route('/{id}', name: 'app_customers_update', methods: [Request::METHOD_PUT])]
