@@ -5,16 +5,52 @@ nelmio_api_doc:
             description: B2B sales of high-end mobiles
             version: 1.0.0
         servers:
-            - url: "http://localhost:8000/"
-              description: Development server
+            - url: '{scheme}://{host}:{port}'
+              variables:
+                  scheme:
+                      enum:
+                          - http
+                          - https
+                      default: http
+                  host:
+                      default: localhost
+                  port:
+                      default: '8000'
         components:
             securitySchemes:
                 Bearer:
-                  type: http
-                  scheme: bearer
-                  bearerFormat: JWT
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
         security:
             - Bearer: []
+        paths:
+            /api/login_check:
+                post:
+                    security: []
+                    tags:
+                        - Security
+                    requestBody:
+                        content:
+                            'application/json':
+                                schema:
+                                    type: object
+                                    properties:
+                                        username:
+                                            type: string
+                                        password:
+                                            type: string
+                    responses:
+                        '200':
+                            description: A JWT token
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            token:
+                                                type: string
     areas:
-        path_patterns:
-            - ^/api(?!/doc$)
+        default:
+            path_patterns:
+                - ^/api(?!/doc$)

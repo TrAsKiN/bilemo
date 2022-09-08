@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use OpenApi\Attributes as OA;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -14,10 +16,13 @@ class Customer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[OA\Property(type: 'integer')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
+    #[OA\Property(type: 'string', maxLength: 255)]
+    #[Groups(['request'])]
     private ?string $name = null;
 
     #[Ignore]
@@ -26,7 +31,10 @@ class Customer
     private ?User $owner = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     #[Assert\Email]
+    #[OA\Property(type: 'string', maxLength: 255)]
+    #[Groups(['request'])]
     private ?string $email = null;
 
     public function getId(): ?int
