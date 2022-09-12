@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;
+use App\Service\HateoasService;
 use App\Service\PaginatorService;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
@@ -11,6 +12,7 @@ use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -19,6 +21,12 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Security(name: 'Bearer')]
 class ProductController extends AbstractController
 {
+    public function __construct(
+        RequestStack $requestStack
+    ) {
+        $requestStack->getCurrentRequest()->attributes->add([HateoasService::KEY => Product::class]);
+    }
+
     #[Route(name: 'app_products_list', methods: [Request::METHOD_GET])]
     #[OA\Response(
         response: Response::HTTP_OK,
