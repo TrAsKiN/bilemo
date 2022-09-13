@@ -16,8 +16,9 @@ class CustomerFixtures extends Fixture implements DependentFixtureInterface
         $user = $this->getReference(UserFixtures::USER_REFERENCE);
         /** @var User $userTest */
         $userTest = $this->getReference(UserFixtures::USER_REFERENCE . 'Test');
+
         $customerRepository = $manager->getRepository(Customer::class);
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i <= 15; $i++) {
             $customer = (new Customer())
                 ->setEmail("customer$i@example.com")
                 ->setName("Customer $i")

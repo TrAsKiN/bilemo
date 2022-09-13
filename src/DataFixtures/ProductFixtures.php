@@ -11,7 +11,7 @@ class ProductFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $productRepository = $manager->getRepository(Product::class);
-        for ($i = 1; $i <= 20; $i++) {
+        for ($i = 1; $i <= 30; $i++) {
             $product = (new Product())
                 ->setBrand("Brand $i")
                 ->setModel("Model $i")
