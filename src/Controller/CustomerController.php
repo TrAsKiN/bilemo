@@ -31,6 +31,14 @@ class CustomerController extends AbstractController
     }
 
     #[Route(name: 'app_customers_list', methods: [Request::METHOD_GET])]
+    #[OA\Parameter(
+        name: 'page',
+        in: 'query',
+        required: false,
+        schema: new OA\Schema(
+            type: 'integer'
+        )
+    )]
     #[OA\Response(
         response: Response::HTTP_OK,
         description: "Customers list",
