@@ -20,14 +20,16 @@ class HateoasService
         $updatedData = [];
         if (isset($data['data'])) {
             $updatedData['data'] = [];
-            $updatedData['links'] = $data['links'];
+            if (isset($data['links'])) {
+                $updatedData['links'] = $data['links'];
+            }
             foreach ($data['data'] as $entry) {
                 if ($links = $this->parseEntity($entry, $entity)) {
                     $entry['links'] = $links;
                 }
                 $updatedData['data'][] = $entry;
             }
-        } else {
+        } elseif (isset($data)) {
             if ($links = $this->parseEntity($data, $entity)) {
                 $data['links'] = $links;
                 $updatedData = $data;
