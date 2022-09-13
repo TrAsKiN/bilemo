@@ -11,12 +11,12 @@ class CustomerVoter extends Voter
 {
     public const IS_MINE = 'CUSTOMER_IS_MINE';
 
-    protected function supports(string $attribute, $subject): bool
+    protected function supports(string $attribute, mixed $subject): bool
     {
         return $attribute == self::IS_MINE && $subject instanceof Customer;
     }
 
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
         if (!$user instanceof UserInterface) {
