@@ -28,6 +28,14 @@ class ProductController extends AbstractController
     }
 
     #[Route(name: 'app_products_list', methods: [Request::METHOD_GET])]
+    #[OA\Parameter(
+        name: 'page',
+        in: 'query',
+        required: false,
+        schema: new OA\Schema(
+            type: 'integer'
+        )
+    )]
     #[OA\Response(
         response: Response::HTTP_OK,
         description: "Products list",
@@ -38,7 +46,7 @@ class ProductController extends AbstractController
                     type: Product::class
                 )
             )
-        )
+        ),
     )]
     public function productsList(
         Request $request,
