@@ -19,10 +19,16 @@ class PaginatorService
         ];
         if (count($items) > $maxPerPage) {
             if ($page > 1) {
-                $result['links']['previous'] = $this->urlGenerator->generate($route, array_merge($params, ['page' => $page - 1]), UrlGeneratorInterface::ABSOLUTE_URL);
+                $result['links'][] = [
+                    'rel' => 'previous',
+                    'url' => $this->urlGenerator->generate($route, array_merge($params, ['page' => $page - 1]), UrlGeneratorInterface::ABSOLUTE_URL)
+                ];
             }
             if (count($items) > $page * $maxPerPage) {
-                $result['links']['next'] = $this->urlGenerator->generate($route, array_merge($params, ['page' => $page + 1]), UrlGeneratorInterface::ABSOLUTE_URL);
+                $result['links'][] = [
+                    'rel' => 'next',
+                    'url' => $this->urlGenerator->generate($route, array_merge($params, ['page' => $page + 1]), UrlGeneratorInterface::ABSOLUTE_URL)
+                ];
             }
         }
         return $result;
