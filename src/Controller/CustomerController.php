@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/customers')]
 #[OA\Tag('Customers')]
@@ -76,15 +77,20 @@ class CustomerController extends AbstractController
     public function customersAdd(
         Request $request,
         CustomerRepository $customerRepository,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        ValidatorInterface $validator
     ): JsonResponse {
         $newCustomer = $serializer->deserialize($request->getContent(), Customer::class, 'json');
         $newCustomer->setOwner($this->getUser());
+        $errors = $validator->validate($newCustomer);
+        if ($errors->count() > 0) {
+            return $this->json(null, Response::HTTP_BAD_REQUEST);
+        }
         $customerRepository->add($newCustomer, true);
         return $this->json($newCustomer, Response::HTTP_CREATED);
     }
 
-    #[Route('/{id}', name: 'app_customers_show', methods: [Request::METHOD_GET])]
+    #[Route('/{id}', name: 'app_customers_show', requirements: ['id' => '\d'], methods: [Request::METHOD_GET])]
     #[OA\Response(
         response: Response::HTTP_OK,
         description: "Customer details",
@@ -97,7 +103,7 @@ class CustomerController extends AbstractController
         return $this->json($customer, Response::HTTP_OK)->setSharedMaxAge(3600);
     }
 
-    #[Route('/{id}', name: 'app_customers_update', methods: [Request::METHOD_PUT])]
+    #[Route('/{id}', name: 'app_customers_update', requirements: ['id' => '\d'], methods: [Request::METHOD_PUT])]
     #[OA\RequestBody(
         content: new OA\JsonContent(
             ref: new Model(type: Customer::class, groups: ['request'])
@@ -112,17 +118,22 @@ class CustomerController extends AbstractController
         Request $request,
         Customer $customer,
         SerializerInterface $serializer,
-        CustomerRepository $customerRepository
+        CustomerRepository $customerRepository,
+        ValidatorInterface $validator
     ): JsonResponse {
         $this->denyAccessUnlessGranted(CustomerVoter::IS_MINE, $customer);
         $serializer->deserialize($request->getContent(), Customer::class, 'json', [
             AbstractNormalizer::OBJECT_TO_POPULATE => $customer
         ]);
+        $errors = $validator->validate($customer);
+        if ($errors->count() > 0) {
+            return $this->json(null, Response::HTTP_BAD_REQUEST);
+        }
         $customerRepository->add($customer, true);
         return $this->json($customer, Response::HTTP_OK);
     }
 
-    #[Route('/{id}', name: 'app_customers_delete', methods: [Request::METHOD_DELETE])]
+    #[Route('/{id}', name: 'app_customers_delete', requirements: ['id' => '\d'], methods: [Request::METHOD_DELETE])]
     #[OA\Response(
         response: Response::HTTP_NO_CONTENT,
         description: "Customer deleted"
